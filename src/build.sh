@@ -86,7 +86,6 @@ sed -i "s^KUBE_PS1_CTX_COLOR-red^KUBE_PS1_CTX_COLOR-green^g" /opt/k8s-client/kub
 #replace dot-files
 rm -rf /etc/skel && mkdir -p /etc/skel
 cp /root/.bashrc /etc/skel/
-cp /root/.profile /etc/skel/
 
 #add user
 useradd -m -d /home/koper -s /bin/bash koper
