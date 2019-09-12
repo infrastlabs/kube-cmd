@@ -10,7 +10,7 @@
 
 |   组件   |  版本   |                URL链接                |                   说明                   |
 | -------- | ------- | ------------------------------------- | ---------------------------------------- |
-| kubectl  | v1.14.1 | https://github.com/kubernetes/kubectl | 简写kc,AutoCompletion，-k 支持kustomize  |
+| kubectl  | v1.14.6 | https://github.com/kubernetes/kubectl | 简写kc,AutoCompletion，-k 支持kustomize  |
 | helm     | v2.14.3  | https://github.com/helm/helm          | 简写hm,AutoCompletion, tiller本地模式    |
 | stern    | v1.10.0 | https://github.com/wercker/stern      | 简写sn,AutoCompletion, 多POD日志实时查看 |
 | kubectx  | master  | https://github.com/ahmetb/kubectx     | kkx/kkn 切换集群 切换NS                  |
