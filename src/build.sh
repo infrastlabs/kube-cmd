@@ -84,7 +84,7 @@ echo "export HELM_HOST=localhost:44134" >> /etc/profile
 sed -i "s^KUBE_PS1_CTX_COLOR-red^KUBE_PS1_CTX_COLOR-green^g" /opt/k8s-client/kube-ps1/kube-ps1.sh #alter | git pull
 
 #replace dot-files
-rm -rf /etc/skel && mkdir -p /etc/skel
+rm -rf /etc/skel/.bashrc
 cp /root/.bashrc /etc/skel/
 
 #add user
