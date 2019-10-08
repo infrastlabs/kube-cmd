@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Install
-# jq coreutils graphviz
-apk add --no-cache openssh git lftp jq coreutils graphviz
+# Install  (htpasswd)
+# jq coreutils graphviz apache2-utils
+apk add --no-cache openssh git lftp jq coreutils graphviz apache2-utils
 
 #bin: kubectl | helm | stern
 cd /usr/local/bin/ && ln -s kubectl kc && ln -s helm hm && ln -s stern sn
