@@ -1,6 +1,7 @@
 # kube-cmd
 
 **软件配套**
+
 - kubectl
 - helm
 - stern
@@ -18,10 +19,8 @@
 **QuickStart**
 
 - 临时用：在Master节点挂着kubeconfig，命令拉起容器 直接操作
-  
-  `docker run -it --rm -v /root/.kube/:/root/.kube --entrypoint=bash registry.cn-shenzhen.aliyuncs.com/infranstlabs:kube-cmd`
+  - `docker run -it --rm -v /root/.kube/:/root/.kube --entrypoint=bash registry.cn-shenzhen.aliyuncs.com/infranstlabs:kube-cmd`
 
 - 正式用：结合rbac-auth生成的多用户配置，docker-compose拉起容器，容器内跑ssh，配备多用户与集群用户对应；
-
-  指令：通过dcp拉起，此处略
+  - `docker-compose up -d` 通过dcp拉起，此处略
 
