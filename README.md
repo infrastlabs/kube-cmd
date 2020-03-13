@@ -1,7 +1,7 @@
 # kube-cmd
 
-## 管理中台
 **软件配套**
+
 - kubectl
 - helm
 - stern
@@ -16,11 +16,11 @@
 | kubectx  | master  | https://github.com/ahmetb/kubectx     | kkx/kkn 切换集群 切换NS                  |
 | kube-ps1 | master  | https://github.com/jonmosco/kube-ps1  | 控制台信息显示                           |
 
-**控制台说明**
-```
-原理：
-# 临时用：在Master节点挂着kubeconfig，命令拉起容器 直接操作；
-  指令：docker run -it --rm -v /root/.kube/:/root/.kube --entrypoint=bash infranstlabs:kube-cmd
-# 正式用：结合rbac-auth生成的多用户配置，docker-compose拉起容器，容器内跑ssh，配备多用户与集群用户对应；
-  指令：通过dcp拉起，此处略
-```
+**QuickStart**
+
+- 临时用：在Master节点挂着kubeconfig，命令拉起容器 直接操作
+  - `docker run -it --rm -v /root/.kube/:/root/.kube --entrypoint=bash registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd`
+
+- 正式用：结合rbac-auth生成的多用户配置，docker-compose拉起容器，容器内跑ssh，配备多用户与集群用户对应
+  - `dcp up -d` 通过docker-compose拉起
+

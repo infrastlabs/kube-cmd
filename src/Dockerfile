@@ -1,7 +1,10 @@
-    FROM infrastlabs/kube-bin:k8s-cmd as src
+    #FROM infrastlabs/kube-bin:k8s-cmd as src
+    #docker tag infrastlabs/kube-bin:k8s-cmd registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd:bin
+    FROM registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd:bin as src
     FROM registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.14.3 as tiller
     FROM registry.cn-shenzhen.aliyuncs.com/k-pub/att-kube-mgr:v1.3 as kgctl
-FROM infrastlabs/alpine-ext
+# FROM infrastlabs/alpine-ext
+FROM registry.cn-shenzhen.aliyuncs.com/infrastlabs/alpine-ext
 MAINTAINER sam <sldevsir@126.com>
 
 USER root
