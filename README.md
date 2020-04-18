@@ -24,7 +24,7 @@ HELM_VERSION="v2.16.6" #"v2.14.3" #"v2.9.1"
 STERN_VER="1.11.0" #1.10.0
 KUSZ_VER="v3.5.4" #2.0.3
 RBAC_VER="0.5.0"
-```                         |
+```
 
 **QuickStart**
 
