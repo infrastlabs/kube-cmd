@@ -1,6 +1,6 @@
 #FROM infrastlabs/kube-bin:k8s-cmd as src
-#kube-cmd:bin ##build in aliyun, in hosts which outside
-FROM registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd:bin as src
+#kube-cmd-build:bin ##build in aliyun, in hosts which outside
+FROM registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd-build:bin as src
 FROM registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.14.3 as tiller
 FROM registry.cn-shenzhen.aliyuncs.com/k-pub/att-kube-mgr:v1.3 as kgctl
 
