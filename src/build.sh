@@ -6,7 +6,7 @@
 apk add --no-cache openssh git lftp jq coreutils graphviz bind-tools apache2-utils sysstat 
 
 #bin: kubectl | helm | stern
-cd /usr/local/bin/ && ln -s kubectl kc && ln -s helm hm && ln -s stern sn
+cd /usr/local/bin/ && chmod +x * && ln -s kubectl kc && ln -s helm hm && ln -s stern sn
 
 cat > /etc/motd <<EOF
 welcome to ct~
