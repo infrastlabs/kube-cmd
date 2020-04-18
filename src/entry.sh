@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "##start ssh"
+echo "start ssh"
 nohup /usr/sbin/sshd -D > /dev/null 2>&1 &
 
 ##tiller-local
