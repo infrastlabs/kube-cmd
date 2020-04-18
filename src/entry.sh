@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-echo "start ssh"
-nohup /usr/sbin/sshd -D > /dev/null 2>&1 &
+runDropbear #when $SSHD_ENABLE=true
+clusterPodMode #when $SSHD_ENABLE=true
 
-##tiller-local
-nohup tiller -listen localhost:44134 > /tmp/log-tiller.log 2>&1 &
+# echo "start ssh"
+# nohup /usr/sbin/sshd -D > /dev/null 2>&1 &  #just use dropbear
 
+# exec $@ #trans exec ## in alpine-ext:weak
 exec tail -f /dev/null

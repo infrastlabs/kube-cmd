@@ -30,6 +30,7 @@ COPY --from=docker-ce /usr/local/bin/docker /usr/local/bin/docker
 COPY --from=src /ws/kube-ps1 /opt/k8s-client/kube-ps1
 COPY --from=src /ws/kubectx /opt/k8s-client/kubectx
 
+RUN cd /usr/local/bin/ && chmod +x * 
 ADD *.sh /
 RUN sh /build.sh
 

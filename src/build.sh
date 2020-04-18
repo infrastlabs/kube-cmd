@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-# Install  (htpasswd)
+# Install  (htpasswd) 
 # dig:bind-tools
 # jq coreutils graphviz bind-tools apache2-utils sysstat
 apk add --no-cache openssh git lftp jq coreutils graphviz bind-tools apache2-utils sysstat 
 
 #bin: kubectl | helm | stern
-cd /usr/local/bin/ && chmod +x * && ln -s kubectl kc && ln -s helm hm && ln -s stern sn
+# cd /usr/local/bin/ && chmod +x * ##in standalone run step for cache layer.
+cd /usr/local/bin/ && ln -s kubectl kc && ln -s helm hm && ln -s stern sn
 
 cat > /etc/motd <<EOF
 welcome to ct~
@@ -49,7 +50,7 @@ function initSSHServer(){
 	 sed -i "s/#PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config &&\
 	 sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
 }
-echo "---initSSHServer---" && initSSHServer
+# echo "---initSSHServer---" && initSSHServer
 
 
 mkdir -p /opt/k8s-client && cd /opt/k8s-client
@@ -64,7 +65,9 @@ mkdir -p /opt/k8s-client && cd /opt/k8s-client
     cat /opt/k8s-client/kubectx/completion/kubens.bash |sed "s^kubens^kkn^g" > /opt/k8s-client/kubens.sh
 
 #.bashrc
-cat >> /root/.bashrc <<EOF
+function bashrcPromot(){
+file=$1
+cat >> $file <<EOF
 source /usr/share/bash-completion/bash_completion
 source /opt/k8s-client/kubectl-completion.sh
 source /opt/k8s-client/helm-completion.sh
@@ -79,7 +82,9 @@ PS1='[\u@\$(kube_ps1) \W]\$ '
 source /usr/local/bin/krand
 EOF
 # PS1='[\u@\h \$kube_ps1 \W]\$ '
-
+}
+bashrcPromot /root/.bashrc
+bashrcPromot /home/ctoper/.bashrc
 
 echo "export HELM_HOST=localhost:44134" >> /etc/profile
 sed -i "s^KUBE_PS1_CTX_COLOR-red^KUBE_PS1_CTX_COLOR-green^g" /opt/k8s-client/kube-ps1/kube-ps1.sh #alter | git pull
@@ -89,15 +94,46 @@ rm -rf /etc/skel/.bashrc
 cp /root/.bashrc /etc/skel/
 
 #add user
-useradd -m -d /home/koper -s /bin/bash koper
-useradd -m -d /home/kapp -s /bin/bash kapp
-epasswd root root #sample weak password, or use random
-erpasswd koper
-erpasswd kapp
+# useradd -m -d /home/koper -s /bin/bash koper
+# useradd -m -d /home/kapp -s /bin/bash kapp
+# epasswd root root #sample weak password, or use random
+# erpasswd koper
+# erpasswd kapp
 
 #shadow: for jumpserver login
-src=/etc/shadow && cp $src /etc/shadow_bk1
-u=koper && sed -i "s^$u\:\!^$u\:no_login^g" $src
-u=kapp && sed -i "s^$u\:\!^$u\:no_login^g" $src
+# src=/etc/shadow && cp $src /etc/shadow_bk1
+# u=koper && sed -i "s^$u\:\!^$u\:no_login^g" $src
+# u=kapp && sed -i "s^$u\:\!^$u\:no_login^g" $src
+
+clusterPodMode=/usr/local/bin/clusterPodMode && touch $clusterPodMode && chmod +x $clusterPodMode
+cat > $clusterPodMode <<EOF
+#gen-kubeconfig dropbear tiller
+if [ "\$SSHD_ENABLE" = "true" ]; then
+  #gen-kubeconfig
+  export TM_KUBECONFIG_PATH=/opt/gen-kubeconfig
+  gen-kubeconfig
+  export KUBECONFIG=\$TM_KUBECONFIG_PATH
+  
+  #owner by ctoper: for kkn usage.
+  chmod 777 /opt #for: error: open /opt/gen-kubeconfig.lock: permission denied
+  chown ctoper:ctoper \$TM_KUBECONFIG_PATH
+
+  #special priviledge, just outside common set.
+  dest=/root/.bashrc
+  echo "export TM_KUBECONFIG_PATH=/opt/gen-kubeconfig" >> \$dest
+  echo "export KUBECONFIG=\\\$TM_KUBECONFIG_PATH" >> \$dest
+  dest=/home/ctoper/.bashrc
+  echo "export TM_KUBECONFIG_PATH=/opt/gen-kubeconfig" >> \$dest
+  echo "export KUBECONFIG=\\\$TM_KUBECONFIG_PATH" >> \$dest
+
+  #run dropbear
+  runDropbear
+  #dropbear -E -F -R -p 22 -b /etc/motd & ##already done in alpine-ext:weak
+
+
+  ##tiller-local
+  nohup tiller -listen localhost:44134 > /tmp/log-tiller.log 2>&1 &
+fi
+EOF
 
 rm -f /build.sh
