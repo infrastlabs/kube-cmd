@@ -10,13 +10,15 @@ mkdir /ws && cd /ws
     wget -q https://storage.googleapis.com/kubernetes-release/release/${KUBE_LATEST_VERSION}/bin/linux/amd64/kubectl -O kubectl
     wget -q https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xzO linux-amd64/helm > helm
     wget -q https://github.com/wercker/stern/releases/download/${STERN_VER}/stern_linux_amd64 -O stern
-    wget -q https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSZ_VER}/kustomize_${KUSZ_VER}_linux_amd64 -O kustomize
+    wget -q https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSZ_VER}/kustomize_${KUSZ_VER}_linux_amd64.tar.gz | tar -xz #O linux-amd64/kustomize  -O kustomize
     chmod +x *
+    tree -h ./
 
     #repo
+    apk add git
     git clone https://github.com/jonmosco/kube-ps1.git
     git clone https://github.com/ahmetb/kubectx.git
-    ls -lh ./
+    ls -lh ./ 
 cd ..
 
 rm -f /build.sh
