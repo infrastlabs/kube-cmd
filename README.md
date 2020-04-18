@@ -24,13 +24,14 @@ HELM_VERSION="v2.16.6" #"v2.14.3" #"v2.9.1"
 STERN_VER="1.11.0" #1.10.0
 KUSZ_VER="v3.5.4" #2.0.3
 RBAC_VER="0.5.0"
-```                         |
+```
 
 **QuickStart**
 
 - 临时用：在Master节点挂着kubeconfig，命令拉起容器 直接操作
-  - `docker run -it --rm -v /root/.kube/:/root/.kube --entrypoint=bash registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd`
+  - `docker run -it --rm -v /root/.kube/:/root/.kube --network=host --entrypoint=bash registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd`
 
 - 正式用：结合rbac-auth生成的多用户配置，docker-compose拉起容器，容器内跑ssh，配备多用户与集群用户对应
   - `dcp up -d` 通过docker-compose拉起
 
+![](kube-cmd.png)
