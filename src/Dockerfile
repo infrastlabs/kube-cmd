@@ -1,7 +1,8 @@
 #FROM infrastlabs/kube-bin:k8s-cmd as src
+ARG VER_TILLER=v2.16.6
 #kube-cmd-build:bin ##build in aliyun, in hosts which outside
 FROM registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd-build:bin as src
-FROM registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.14.3 as tiller
+FROM registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:${VER_TILLER} as tiller
 FROM registry.cn-shenzhen.aliyuncs.com/k-pub/att-kube-mgr:v1.3 as kgctl
 FROM registry.cn-shenzhen.aliyuncs.com/infrastlabs/gen-kubeconfig as gen-kc
 FROM registry.cn-shenzhen.aliyuncs.com/k-spe/prs-n2n as edge
