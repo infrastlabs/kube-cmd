@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-runDropbear #when $SSHD_ENABLE=true
-clusterPodMode #when $SSHD_ENABLE=true
+#when $SSHD_ENABLE=true
+runDropbear
+clusterPodMode
 
-# echo "start ssh"
+echo "tail -f /dev/null"
 # nohup /usr/sbin/sshd -D > /dev/null 2>&1 &  #just use dropbear
-
 # exec $@ #trans exec ## in alpine-ext:weak
 exec tail -f /dev/null
