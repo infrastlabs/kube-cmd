@@ -1,0 +1,30 @@
+# 3.8: bash4.4 OK
+# 3.12: 5.0.17-r0 OK
+# 3.13: 5.1.16-r0; bash-completion (2.11-r2) OK
+# 3.14 bash (5.1.16-r0) bash-completion (2.11-r4)ERR 
+# 3.16:bash5.1 同3.14 bash下tab>> 找不到bins指令 ERR
+# 3.17:bash (5.2.15-r0) bash-completion (2.11-r4) ERR
+FROM alpine:3.17
+MAINTAINER sam <sldevsir@126.com>
+# USER root
+
+# https://gitee.com/infrastlabs/alpine-ext/blob/master/src/build.sh
+# domain="mirrors.ustc.edu.cn"
+# domain="mirrors.aliyun.com";
+RUN domain="mirrors.ustc.edu.cn"; \
+  echo "http://$domain/alpine/v3.17/main" > /etc/apk/repositories; \
+  echo "http://$domain/alpine/v3.17/community" >> /etc/apk/repositories
+
+#xshell: grep gawk
+#procps: free -h
+#shadow: chpasswd jumpserver, expect<mkpasswd>
+# tmux: libevent ncurses (2.7-VimEnter-err, by hand with low ver); compile with src: v2.3
+# findutils: for k3s agent node.
+# coreutils: base64 for secrets
+# busybox-extras: telnet  ## nc -vzw 2 host port
+# dig: bind-tools
+RUN apk add --no-cache \
+ca-certificates tzdata curl wget \
+sed grep gawk findutils sudo tree unzip procps htop \
+expect shadow xterm bash bash-completion coreutils busybox-extras \
+libevent ncurses openssl bind-tools
