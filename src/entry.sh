@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-kkn default
-
 #when $SSHD_ENABLE=true
 runDropbear
 clusterPodMode
