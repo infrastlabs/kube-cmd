@@ -1,0 +1,18 @@
+version: '2.4'
+services:
+  kcmd:
+    image: registry.cn-shenzhen.aliyuncs.com/infrastlabs/kube-cmd:v2.1
+    # command: /srv/local/k3s/entry.sh
+    # entrypoint: /bin/bash /srv/local/k3s/kcmd.sh
+    restart: unless-stopped
+    privileged: true
+    network_mode: host #host #bridge
+    working_dir: /_ext
+    environment:
+      - KEY1=VAL1
+      - SSHD_ENABLE=true
+    extra_hosts:
+      - "server.k8s.local:127.0.0.1"
+    volumes:
+      - /root/.kube:/root/.kube
+      - /_ext:/_ext
