@@ -190,6 +190,6 @@ EOF
 
 # + ##ssh
 sed -i "s^/bin/ash^/bin/bash^g" /etc/passwd
-echo root:root |chpasswd
+echo "root:root" |chpasswd
 
 rm -f /build.sh
