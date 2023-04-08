@@ -53,6 +53,7 @@ mv /bin/sh /bin/busy_sh && ln -s /bin/bash /bin/sh #sh->bash
 # sed -i '/^entry/d' /etc/sudoers #drop
 ##Alpine-ext################################
 
+mkdir -p /etc/dropbear #genKeys
 runDropbear=/usr/local/bin/runDropbear && touch $runDropbear && chmod +x $runDropbear
 cat > $runDropbear <<EOF
 #dropbear
