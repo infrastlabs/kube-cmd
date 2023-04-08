@@ -139,6 +139,7 @@ alias ll='ls -l'
 alias kin='f(){ kc exec -it "$@" bash;  unset -f f; }; f'
 PS1='[\u@\$(kube_ps1) \W]\$ '
 source /usr/local/bin/krand
+kkn default
 EOF
 # PS1='[\u@\h \$kube_ps1 \W]\$ '
 }
