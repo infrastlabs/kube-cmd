@@ -58,7 +58,8 @@ runDropbear=/usr/local/bin/runDropbear && touch $runDropbear && chmod +x $runDro
 cat > $runDropbear <<EOF
 #dropbear
 if [ "\$SSHD_ENABLE" = "true" ]; then
-  dropbear -E -F -R -p 22 -b /etc/motd &
+  #dropbear -E -F -R -p 22 -b /etc/motd &
+  dropbear -E -F -R -p 22 &
 fi
 EOF
 
