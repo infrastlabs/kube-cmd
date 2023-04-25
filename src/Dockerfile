@@ -33,7 +33,7 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
   WORKDIR /rootfs/usr/local/bin
   COPY --from=docker-ce /usr/local/bin/docker /rootfs/usr/local/bin/docker
   RUN echo a.12; \
-    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=arm64 || arch=amd64; \
+    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=amd64 || arch=arm64; \
     #kubectl helm stern kustomize
     # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.23.md#client-binaries
     # https://dl.k8s.io/v1.23.17/kubernetes-client-linux-amd64.tar.gz #28.6M
@@ -42,7 +42,7 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
     \cp /tmp/kubernetes/client/bin/kubectl .; 
     # 
   RUN \
-    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=arm64 || arch=x86_64; \
+    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=x86_64 || arch=arm64; \
     # https://github.com/FairwindsOps/rbac-lookup/releases/download/v0.10.1/rbac-lookup_0.10.1_Linux_x86_64.tar.gz
     # https://github.com/FairwindsOps/rbac-lookup/releases/download/v0.10.1/rbac-lookup_0.10.1_Linux_arm64.tar.gz
     wget https://ghproxy.com/https://github.com/FairwindsOps/rbac-lookup/releases/download/v${RBAC_VER}/rbac-lookup_${RBAC_VER}_Linux_$arch.tar.gz -O - | tar -xz -C /tmp; \
@@ -53,7 +53,7 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
     # wget https://github.com/tianon/gosu/releases/download/1.11/gosu-amd64 -O gosu
   RUN \
     #gosu-bin
-    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=arm64 || arch=amd64; \
+    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=amd64 || arch=arm64; \
     wget https://github.com/tianon/gosu/releases/download/1.11/gosu-$arch -O gosu;
   # RUN \
   #   #lrzsz-src
