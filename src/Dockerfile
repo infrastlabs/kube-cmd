@@ -4,6 +4,7 @@ FROM docker:19.03.15 as docker-ce
 
 # 3.14.8> 3.13.12
 FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
+  ARG TARGETPLATFORM
   # https://gitee.com/infrastlabs/alpine-ext/blob/master/binary/build.sh
   # #gosu-bin
   # wget https://github.com/tianon/gosu/releases/download/1.11/gosu-amd64 -O gosu
@@ -32,16 +33,19 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
   WORKDIR /rootfs/usr/local/bin
   COPY --from=docker-ce /usr/local/bin/docker /rootfs/usr/local/bin/docker
   RUN echo a.12; \
+    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=arm64 || arch=amd64; \
     #kubectl helm stern kustomize
     # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.23.md#client-binaries
     # https://dl.k8s.io/v1.23.17/kubernetes-client-linux-amd64.tar.gz #28.6M
     # wget -q https://storage.googleapis.com/kubernetes-release/release/${KUBE_LATEST_VERSION}/bin/linux/amd64/kubectl -O kubectl; \
-    wget https://dl.k8s.io/${KUBE_LATEST_VERSION}/kubernetes-client-linux-amd64.tar.gz -O - | tar -xz -C /tmp; find /tmp; \
+    wget https://dl.k8s.io/${KUBE_LATEST_VERSION}/kubernetes-client-linux-$arch.tar.gz -O - | tar -xz -C /tmp; find /tmp; \
     \cp /tmp/kubernetes/client/bin/kubectl .; 
     # 
   RUN \
+    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=arm64 || arch=x86_64; \
     # https://github.com/FairwindsOps/rbac-lookup/releases/download/v0.10.1/rbac-lookup_0.10.1_Linux_x86_64.tar.gz
-    wget https://ghproxy.com/https://github.com/FairwindsOps/rbac-lookup/releases/download/v${RBAC_VER}/rbac-lookup_${RBAC_VER}_Linux_x86_64.tar.gz -O - | tar -xz -C /tmp; \
+    # https://github.com/FairwindsOps/rbac-lookup/releases/download/v0.10.1/rbac-lookup_0.10.1_Linux_arm64.tar.gz
+    wget https://ghproxy.com/https://github.com/FairwindsOps/rbac-lookup/releases/download/v${RBAC_VER}/rbac-lookup_${RBAC_VER}_Linux_$arch.tar.gz -O - | tar -xz -C /tmp; \
     \cp /tmp/rbac-lookup .;
     # wget -q https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xzO linux-amd64/helm > helm
     # wget -q https://github.com/wercker/stern/releases/download/${STERN_VER}/stern_linux_amd64 -O stern
@@ -49,7 +53,8 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
     # wget https://github.com/tianon/gosu/releases/download/1.11/gosu-amd64 -O gosu
   RUN \
     #gosu-bin
-    wget https://github.com/tianon/gosu/releases/download/1.11/gosu-amd64 -O gosu;
+    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=arm64 || arch=amd64; \
+    wget https://github.com/tianon/gosu/releases/download/1.11/gosu-$arch -O gosu;
   # RUN \
   #   #lrzsz-src
   #   ver=lrzsz-0.12.20 && wget https://ohse.de/uwe/releases/$ver.tar.gz -O - | tar -xz -C /tmp; \
