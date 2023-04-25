@@ -53,18 +53,6 @@ mv /bin/sh /bin/busy_sh && ln -s /bin/bash /bin/sh #sh->bash
 # sed -i '/^entry/d' /etc/sudoers #drop
 ##Alpine-ext################################
 
-mkdir -p /etc/dropbear #genKeys
-runDropbear=/usr/local/bin/runDropbear && touch $runDropbear && chmod +x $runDropbear
-cat > $runDropbear <<EOF
-#dropbear
-if [ "\$SSHD_ENABLE" = "true" ]; then
-  #dropbear -E -F -R -p 22 -b /etc/motd &
-  dropbear -E -F -R -p 22 &
-fi
-EOF
-
-
-
 
 #bin: kubectl | helm | stern
 # cd /usr/local/bin/ && chmod +x * ##in standalone run step for cache layer.
@@ -157,37 +145,6 @@ sed -i "s^KUBE_PS1_CTX_COLOR-red^KUBE_PS1_CTX_COLOR-green^g" /usr/local/repos/ku
 
 #add user
 # useradd -m -d /home/koper -s /bin/bash koper
-
-clusterPodMode=/usr/local/bin/clusterPodMode && touch $clusterPodMode && chmod +x $clusterPodMode
-cat > $clusterPodMode <<EOF
-#gen-kubeconfig dropbear tiller
-if [ "\$SSHD_ENABLE" = "true" ]; then
-  #gen-kubeconfig
-  #export TM_KUBECONFIG_PATH=/opt/gen-kubeconfig
-  #gen-kubeconfig
-  #export KUBECONFIG=\$TM_KUBECONFIG_PATH
-  
-  #owner by ctoper: for kkn usage.
-  #chmod 777 /opt #for: error: open /opt/gen-kubeconfig.lock: permission denied
-  #chown ctoper:ctoper \$TM_KUBECONFIG_PATH
-
-  #special priviledge, just outside common set.
-  dest=/root/.bashrc
-  #echo "export TM_KUBECONFIG_PATH=/opt/gen-kubeconfig" >> \$dest
-  #echo "export KUBECONFIG=\\\$TM_KUBECONFIG_PATH" >> \$dest
-  dest=/home/ctoper/.bashrc
-  #echo "export TM_KUBECONFIG_PATH=/opt/gen-kubeconfig" >> \$dest
-  #echo "export KUBECONFIG=\\\$TM_KUBECONFIG_PATH" >> \$dest
-
-  #run dropbear
-  runDropbear
-  #dropbear -E -F -R -p 22 -b /etc/motd & ##already done in alpine-ext:weak
-
-
-  ##tiller-local
-  #nohup tiller -listen localhost:44134 > /tmp/log-tiller.log 2>&1 &
-fi
-EOF
 
 # + ##ssh
 sed -i "s^/bin/ash^/bin/bash^g" /etc/passwd
