@@ -73,9 +73,11 @@ MAINTAINER sam <sldevsir@126.com>
 # USER root
 
 # https://gitee.com/infrastlabs/alpine-ext/blob/master/src/build.sh
+# https://www.jakehu.me/2021/alpine-mirrors/
 # domain="mirrors.ustc.edu.cn"
 # domain="mirrors.aliyun.com";
-RUN domain="mirrors.ustc.edu.cn"; \
+# mirrors.tuna.tsinghua.edu.cn
+RUN domain="mirrors.tuna.tsinghua.edu.cn"; \
   echo "http://$domain/alpine/v3.13/main" > /etc/apk/repositories; \
   echo "http://$domain/alpine/v3.13/community" >> /etc/apk/repositories
 
