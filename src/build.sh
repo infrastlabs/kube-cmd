@@ -78,14 +78,16 @@ kube-mgr-usage:
 EOF
 
 #krand
-krand=/usr/local/bin/krand && touch $krand ##&& chmod +x $krand #needn't exec
+krand=/usr/local/bin/krand && touch $krand && chmod +x $krand #needn't exec>> hand exec
 cat > $krand <<EOF
 if [ -e \$HOME/.kube/config ]; then
     rand=\`date +%s%N | md5sum | head -c 4\`
     mkdir -p \$HOME/.tmp/ && chmod -R 0600 \$HOME/.tmp/
     dest=\$HOME/.tmp/kubeconfig-\$rand
     cp -a \$HOME/.kube/config \$dest
-    export KUBECONFIG=\$dest
+    echo export KUBECONFIG=\$dest; export KUBECONFIG=\$dest
+else
+    echo "skip, none \$HOME/.kube/config"
 fi
 EOF
 
@@ -100,6 +102,9 @@ function initSSHServer(){
 	sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
 }
 # echo "---initSSHServer---" && initSSHServer
+# 
+mkdir -p /etc/dropbear /var/log/supervisor
+echo -e "#!/bin/bash\ntest -z "\$1" && exit 0; supervisord ctl \$@" > /usr/local/bin/sv; chmod +x /usr/local/bin/sv
 
 
 mkdir -p /usr/local/repos && cd /usr/local/repos
@@ -129,7 +134,6 @@ alias ll='ls -l'
 alias kin='f(){ kc exec -it "$@" bash;  unset -f f; }; f'
 PS1='[\u@\$(kube_ps1) \W]\$ '
 source /usr/local/bin/krand
-kkn default > /dev/null 2>&1
 EOF
 # PS1='[\u@\h \$kube_ps1 \W]\$ '
 }

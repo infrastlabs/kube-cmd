@@ -41,7 +41,7 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
     wget https://dl.k8s.io/${KUBE_LATEST_VERSION}/kubernetes-client-linux-$arch.tar.gz -O - | tar -xz -C /tmp; find /tmp; \
     \cp /tmp/kubernetes/client/bin/kubectl .; 
     # 
-  RUN \
+  RUN echo a.12; \
     test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=x86_64 || arch=arm64; \
     # https://github.com/FairwindsOps/rbac-lookup/releases/download/v0.10.1/rbac-lookup_0.10.1_Linux_x86_64.tar.gz
     # https://github.com/FairwindsOps/rbac-lookup/releases/download/v0.10.1/rbac-lookup_0.10.1_Linux_arm64.tar.gz
@@ -54,7 +54,29 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
   RUN \
     #gosu-bin
     test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=amd64 || arch=arm64; \
-    wget https://github.com/tianon/gosu/releases/download/1.11/gosu-$arch -O gosu;
+    wget https://ghproxy.com/https://github.com/tianon/gosu/releases/download/1.11/gosu-$arch -O gosu;
+  
+  # v0.19.0-amd64: errRun with alpine>>  
+  # tini-amd64 23.5 KB
+  # tini-muslc-amd64  19 KB
+  # tini-static-amd64 850 KB
+  # tini-static-muslc-amd64 42.8 KB
+  # https://ghproxy.com/https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-muslc-amd64
+  RUN echo a.12; \
+    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=amd64 || arch=arm64; echo "arch=$arch"; \
+    mkdir -p /rootfs/sbin; \
+    wget -O /rootfs/sbin/tini https://ghproxy.com/https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-muslc-$arch; chmod +x /rootfs/sbin/tini; 
+
+
+  # go:supervisord x64 10.6M; arm64 3.22M; v0.7.3@May 3, 2021
+  # /tmp/supervisord_0.7.3_Linux_64-bit/supervisord_static 只x64包里有
+  # /tmp/supervisord_0.7.3_Linux_64-bit/supervisord #3.6M
+  RUN \
+    test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=64-bit || arch=ARM64; echo "arch=$arch"; \
+    wget https://ghproxy.com/https://github.com/ochinchina/supervisord/releases/download/v0.7.3/supervisord_0.7.3_Linux_$arch.tar.gz -O - | tar -xz -C /tmp; find /tmp; \
+    \cp /tmp/supervisord_0.7.3_Linux_$arch/supervisord .; 
+
+
   # RUN \
   #   #lrzsz-src
   #   ver=lrzsz-0.12.20 && wget https://ohse.de/uwe/releases/$ver.tar.gz -O - | tar -xz -C /tmp; \
@@ -113,15 +135,26 @@ RUN apk add --no-cache tmux
 # bins
 COPY --from=down /rootfs /
 
-ENV TIMEZONE Asia/Shanghai
-ENV LANG C.UTF-8
+ENV TIMEZONE=Asia/Shanghai \
+ LANG=C.UTF-8 \
+ SSHD_ENABLE=false \
+ SSHD_PORT=22
 # gosu tmux lrzsz
 # COPY --from=src /ws/ /usr/bin/
 ADD src/dot/. /root/
 ADD src/*.sh /
+ADD src/sv.conf /etc/supervisor/supervisord.conf
 RUN sh /build.sh
 
 ##run as root
 # USER root
 WORKDIR /root
-ENTRYPOINT ["bash", "-c", "/entry.sh"]
+# ENTRYPOINT ["bash", "-c", "/entry.sh"]
+# tini: https://www.5axxw.com/wiki/content/01ppi2
+ENTRYPOINT ["/sbin/tini","--"]
+# Run your program under Tini
+# or docker run your-image /your/program ...
+# CMD ["/your/program", "-and", "-its", "arguments"]
+
+# CMD ["bash"]
+CMD ["bash", "-c", "/entry.sh"]
