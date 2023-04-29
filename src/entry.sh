@@ -22,17 +22,14 @@ function kubeconfigGenerate() {
     kubectl config use-context ctx-sa $kubeconfig
   fi
 }
+kubeconfigGenerate
 
 
-#when $SSHD_ENABLE=true
+#when SSHD_ENABLE=true
 function runDropbear(){
-#dropbear
-if [ "$SSHD_ENABLE" = "true" ]; then
   kkn default > /dev/null 2>&1 #k3s's kubeconfig.yaml
-
   #dropbear -E -F -R -p 22 -b /etc/motd &
   dropbear -E -F -R -p 22
-fi
 }
 function clusterPodMode(){
 #gen-kubeconfig dropbear tiller
@@ -40,7 +37,7 @@ if [ "$SSHD_ENABLE" = "true" ]; then
   #gen-kubeconfig
   #export TM_KUBECONFIG_PATH=/opt/gen-kubeconfig
   #gen-kubeconfig
-  kubeconfigGenerate
+  # kubeconfigGenerate
   
   #export KUBECONFIG=$TM_KUBECONFIG_PATH
   #owner by ctoper: for kkn usage.
