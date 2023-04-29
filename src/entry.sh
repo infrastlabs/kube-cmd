@@ -2,7 +2,7 @@
 
 function kubeconfigGenerate() {
   # 生成 kubelet kubeconfig 配置文件 (ref: 01kubelet.sh)
-  local kubeconfig="--kubeconfig=/root/.kube/config"
+  local kconf="--kubeconfig=/root/.kube/config"
   # embd="--embed-certs=true"
   # ca.crt, token, namespace
   #TODO token变化后，同步更新 >> krand (改生成用户证书??)
@@ -12,28 +12,29 @@ function kubeconfigGenerate() {
   if [ -s $CA ]; then
     mkdir -p /root/.kube
     kubectl config set-cluster kubernetes \
-      --certificate-authority=$CA $embd --server=${KUBE_APISERVER} $kubeconfig
+      --certificate-authority=$CA $embd --server=${KUBE_APISERVER} $kconf
     # --client-certificate/key --token --username/password
     kubectl config set-credentials "sa" \
-      --token=${TOKEN} $kubeconfig
+      --token=${TOKEN} $kconf
     # 
     kubectl config set-context ctx-sa \
-      --cluster=kubernetes --namespace=default --user="sa" $kubeconfig
-    kubectl config use-context ctx-sa $kubeconfig
+      --cluster=kubernetes --namespace=default --user="sa" $kconf
+    kubectl config use-context ctx-sa $kconf
   fi
 }
 kubeconfigGenerate
 
 
-# mkdir -p /root/.kube/; kubeconfig="--kubeconfig=/root/.kube/config"; kubectl config set-context ctx-k8s --cluster=default --namespace=default --user=default $kubeconfig; kubectl config use-context ctx-k8s $kubeconfig
+# mkdir -p /root/.kube/; kconf="--kubeconfig=/root/.kube/config"; kubectl config delete-context default $kconf; kubectl config set-context ctx-k8s --cluster=default --namespace=default --user=default $kconf; kubectl config use-context ctx-k8s $kconf
 #when SSHD_ENABLE=true
 function runDropbear(){
   # kkn default > /dev/null 2>&1 #k3s's kubeconfig.yaml >> avoid: clust-conn err;
   mkdir -p /root/.kube/
-  kubeconfig="--kubeconfig=/root/.kube/config"
+  kconf="--kubeconfig=/root/.kube/config"
+  kubectl config delete-context default $kconf; 
   kubectl config set-context ctx-k8s \
-    --cluster=default --namespace=default --user=default $kubeconfig
-  kubectl config use-context ctx-k8s $kubeconfig
+    --cluster=default --namespace=default --user=default $kconf
+  kubectl config use-context ctx-k8s $kconf
 
   #dropbear -E -F -R -p 22 -b /etc/motd &
   dropbear -E -F -R -p 22
