@@ -25,7 +25,7 @@ function kubeconfigGenerate() {
 kubeconfigGenerate
 
 
-# mkdir -p /root/.kube/; kconf="--kubeconfig=/root/.kube/config"; kubectl config delete-context default $kconf; kubectl config set-context ctx-k8s --cluster=default --namespace=default --user=default $kconf; kubectl config use-context ctx-k8s $kconf
+# mkdir -p /root/.kube/; kconf='--kubeconfig=/root/.kube/config'; kubectl config delete-context default $kconf; kubectl config set-context ctx-k8s --cluster=default --namespace=default --user=default $kconf; kubectl config use-context ctx-k8s $kconf;
 #when SSHD_ENABLE=true
 function runDropbear(){
   # kkn default > /dev/null 2>&1 #k3s's kubeconfig.yaml >> avoid: clust-conn err;
