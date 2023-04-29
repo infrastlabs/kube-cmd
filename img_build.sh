@@ -17,5 +17,5 @@ ns=infrastlabs
 
 #src
 img=kube-cmd:v2.1 #latest #v1.0 
-docker build --pull -t $repo/$ns/$img -f src/Dockerfile .
+docker build --network=host --pull -t $repo/$ns/$img -f src/Dockerfile .
 docker push $repo/$ns/$img
