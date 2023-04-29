@@ -20,21 +20,21 @@ function kubeconfigGenerate() {
     kubectl config set-context ctx-sa \
       --cluster=kubernetes --namespace=default --user="sa" $kconf
     kubectl config use-context ctx-sa $kconf
+  else
+    mkdir -p /root/.kube/; 
+    kconf='--kubeconfig=/root/.kube/config';  #k3s's kubeconfig
+    kubectl config delete-context default $kconf; 
+    kubectl config set-context ctx-k8s \
+      --cluster=default --namespace=default --user=default $kconf; 
+    kubectl config use-context ctx-k8s $kconf; 
   fi
 }
 kubeconfigGenerate
 
 
-# mkdir -p /root/.kube/; kconf='--kubeconfig=/root/.kube/config'; kubectl config delete-context default $kconf; kubectl config set-context ctx-k8s --cluster=default --namespace=default --user=default $kconf; kubectl config use-context ctx-k8s $kconf;
 #when SSHD_ENABLE=true
-function runDropbear(){
-  # kkn default > /dev/null 2>&1 #k3s's kubeconfig.yaml >> avoid: clust-conn err;
-  mkdir -p /root/.kube/
-  kconf="--kubeconfig=/root/.kube/config"
-  kubectl config delete-context default $kconf; 
-  kubectl config set-context ctx-k8s \
-    --cluster=default --namespace=default --user=default $kconf
-  kubectl config use-context ctx-k8s $kconf
+function runDropbear(){ #deprecated
+  kkn default > /dev/null 2>&1 #k3s's kubeconfig.yaml >> avoid: clust-conn err;
 
   #dropbear -E -F -R -p 22 -b /etc/motd &
   dropbear -E -F -R -p 22
