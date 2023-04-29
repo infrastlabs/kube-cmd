@@ -60,20 +60,21 @@ cd /usr/local/bin/ && ln -s kubectl kc #&& ln -s helm hm && ln -s stern sn
 
 cat > /etc/motd <<EOF
 welcome to ct~
-use khelp to view the usage of detail commands.
+use khelp to view the detail commands.
 EOF
 
 #khelp
 khelp=/usr/local/bin/khelp && touch $khelp && chmod +x $khelp
 cat > $khelp <<EOF
 echo '######################################
-kube-mgr-usage:
-<kc/kubectl, hm/helm, sn/stern, kkx/kkn>
-1.kc get all --all-namespaces | kc get pod -l app=jk1-jenkins -Lapp
+kube-cmd:
+  <kc/kubectl, kkx/kkn, sn/stern, hm/helm, khelp/krand>
+0.kc get all --all-namespaces | kc get pod -l app=jk1-jenkins -Lapp
    kc get pod,svc,ing -n devops | kc logs -f --tail=200 xxx |kc exec -it xxx bash
-2.hm ls | hm install --name jenkins ./jenkins
-3.sn xxx | sn -l label
-4.kkn to switch namespace, kkx to switch cluster. (default only one cluster)
+1.kkn to switch namespace, kkx to switch cluster. (default only one cluster)
+2.krand generate random kubeconfig. (with new one, if token refreshed)
+3.(droped)sn xxx | sn -l label
+4.(droped)hm ls | hm install --name jenkins ./jenkins
 ######################################'
 EOF
 

@@ -10,7 +10,8 @@ if [ -s $tk1 ]; then
         sum1=$(md5sum $tk1 |awk '{print $1}')
         sum2=$(md5sum $tk2 |awk '{print $1}')
         if [ "$sum1" != "$sum2" ]; then
-            echo -e "\nrefreshed token: $sum1 != $sum2"
+            rq0=$(date '+%Y%m%d %H:%M:%S')
+            echo -e "\n[$rq0]refreshed token: $sum1 != $sum2"
             cat $tk1> $tk2 #refresh tk2
             TOKEN=$(cat $tk1); kubectl config set-credentials "sa" \
                 --token=${TOKEN} $kubeconfig

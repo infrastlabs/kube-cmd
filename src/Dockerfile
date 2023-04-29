@@ -31,7 +31,6 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
 
   #RUN mkdir -p /rootfs/usr/local/bin && cd /rootfs/usr/local/bin; \
   WORKDIR /rootfs/usr/local/bin
-  COPY --from=docker-ce /usr/local/bin/docker /rootfs/usr/local/bin/docker
   RUN echo a.12; \
     test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=amd64 || arch=arm64; \
     #kubectl helm stern kustomize
@@ -60,12 +59,13 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
   # tini-amd64 23.5 KB
   # tini-muslc-amd64  19 KB
   # tini-static-amd64 850 KB
-  # tini-static-muslc-amd64 42.8 KB
+  # tini-static-arm64 534 KB
+  # tini-static-muslc-amd64 42.8 KB #无arm64
   # https://ghproxy.com/https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-muslc-amd64
   RUN echo a.12; \
     test -z "$(echo $TARGETPLATFORM |grep arm)" && arch=amd64 || arch=arm64; echo "arch=$arch"; \
     mkdir -p /rootfs/sbin; \
-    wget -O /rootfs/sbin/tini https://ghproxy.com/https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-muslc-$arch; chmod +x /rootfs/sbin/tini; 
+    wget -O /rootfs/sbin/tini https://ghproxy.com/https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-$arch; chmod +x /rootfs/sbin/tini; 
 
 
   # go:supervisord x64 10.6M; arm64 3.22M; v0.7.3@May 3, 2021
@@ -87,6 +87,7 @@ FROM registry.cn-shenzhen.aliyuncs.com/infrasync/alpine:3.13.12 as down
     chmod +x *; \
     #tree -h ./
     find; ls -lh; du -sh *
+  # COPY --from=docker-ce /usr/local/bin/docker /rootfs/usr/local/bin/docker
 
 # alpine-ext:weak ERR: home/end>>~
 # FROM registry.cn-shenzhen.aliyuncs.com/infrastlabs/alpine-ext:weak
