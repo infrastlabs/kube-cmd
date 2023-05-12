@@ -135,6 +135,11 @@ RUN mkdir -p /usr/local/repos; cd /usr/local/repos; \
 RUN apk add --no-cache tmux
 # bins
 COPY --from=down /rootfs /
+RUN \
+  #1.23.2, build 1110ad01
+  wget -O /bin/docker-compose https://ghproxy.com/https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-linux-x86_64; \
+  chmod +x /bin/docker-compose; \
+  ln -s /bin/docker-compose /bin/dcp; 
 
 ENV TIMEZONE=Asia/Shanghai \
  LANG=C.UTF-8 \
